@@ -146,6 +146,7 @@ class App {
         this.player = this.createPlayer();
 
         const locations = [
+            new THREE.Vector3(0.105, 0.086, 0.925),
             new THREE.Vector3(-0.409, 0.086, 4.038),
             new THREE.Vector3(-0.846, 0.112, 5.777),
             new THREE.Vector3(5.220, 0.176, 2.677),
@@ -159,6 +160,12 @@ class App {
 
         // TASK 1. Add teleports
         this.teleports = [];
+        locations.forEach( location => {
+            const teleport = new TeleportMesh();
+            teleport.position.copy(location);
+            self.scene.add(teleport);
+            self.teleports.push(teleport);
+        })
 
 
         this.setupXR();
@@ -232,11 +239,13 @@ class App {
         function onSqueezeStart() {
             this.userData.squeezePressed = true;
             // TASK 1. Show teleports
+            self.teleports.forEach(teleport => teleport.fadeIn(1) );
         }
 
         function onSqueezeEnd() {
             this.userData.squeezePressed = false;
             // TASK 1. Hide teleports
+            self.teleports.forEach(teleport => teleport.fadeOut(1) );
 
         }
 
@@ -281,7 +290,10 @@ class App {
                 marker.visible = true;
             }
             // TASK 1. Store intersected teleport to the controller user data
-
+            else if (intersect.object.parent && intersect.object.parent instanceof TeleportMesh){
+                intersect.object.parent.selected = true;
+                controller.userData.teleport = intersect.object.parent;
+            }
         }
 
     }
@@ -326,6 +338,10 @@ class App {
 
         if (this.renderer.xr.isPresenting) {
             // TASK 1. Update teleport
+            this.teleports.forEach(teleport => {
+                teleport.selected = false;
+                teleport.update();
+            });
 
             this.controllers.forEach(controller => {
                 self.intersectObjects(controller);
