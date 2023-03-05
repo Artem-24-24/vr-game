@@ -97,6 +97,8 @@ class App {
         // Prepare loading bar
         this.loadingBar = new LoadingBar(loader);
 
+        // TASK 2.1.1 Create empty array for storing interacting meshes
+
         const self = this;
 
         // Load a glTF resource
@@ -117,6 +119,8 @@ class App {
                             child.geometry.scale(scale, scale, scale);
                             child.scale.set(2, 2, 2);
                         } else {
+                            // TASK 2.1.2 Check if mesh is interacting
+
                             child.castShadow = false;
                             child.receiveShadow = true;
                         }
@@ -140,6 +144,11 @@ class App {
 
             }
         );
+    }
+
+    // TASK 2.1.3 Store if object is interacting meshes
+    storeIfInteractingMesh(mesh) {
+
     }
 
     initGame() {
@@ -261,8 +270,12 @@ class App {
         })
 
         this.collisionObjects = [this.navmesh];
-        // TASK 1. Add teleports to the collision objects
-        this.teleports.forEach( teleport => self.collisionObjects.push(teleport.children[0]) );
+        // TASK 1.5.1 Add teleports cylinders to the collisionObjects
+
+
+        // TASK 2.3 Add meshes to the list of collisionObjects for selecting them by the controllers.
+
+
     }
 
     intersectObjects(controller) {
@@ -270,8 +283,11 @@ class App {
         const line = controller.getObjectByName('ray');
         this.workingMatrix.identity().extractRotation(controller.matrixWorld);
 
-        this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
-        this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.workingMatrix);
+        this.raycaster.ray.origin
+            .setFromMatrixPosition(controller.matrixWorld);
+        this.raycaster.ray.direction
+            .set(0, 0, -1)
+            .applyMatrix4(this.workingMatrix);
 
         const intersects = this.raycaster.intersectObjects(this.collisionObjects);
         const marker = controller.userData.marker;
@@ -337,15 +353,15 @@ class App {
         this.stats.update();
 
         if (this.renderer.xr.isPresenting) {
-            // TASK 1. Update teleport
-            this.teleports.forEach(teleport => {
-                teleport.selected = false;
-                teleport.update();
-            });
+            // TASK 1.4 Redraw teleports with update method
+
 
             this.controllers.forEach(controller => {
                 self.intersectObjects(controller);
             })
+
+            // TASK 2.2 Update interactable meshes
+
 
             this.player.update(dt);
         }
