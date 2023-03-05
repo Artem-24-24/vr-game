@@ -186,6 +186,7 @@ class App {
         this.player = this.createPlayer();
 
         const locations = [
+            new THREE.Vector3(15.85, 2.50, 0.00),
             new THREE.Vector3(0.105, 0.086, 0.925),
             new THREE.Vector3(-0.409, 0.086, 4.038),
             new THREE.Vector3(-0.846, 0.112, 5.777),
